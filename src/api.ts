@@ -7,7 +7,9 @@ const production_url = import.meta.env.VITE_RENDER_API_URL;
 console.log(`Running in ${react_env} Mode`)
 
 const baseURL = react_env === 'development' ? development_url : production_url
-
+console.log(baseURL)
+console.log(development_url)
+console.log(production_url)
 
 const api = axios.create({
   baseURL
