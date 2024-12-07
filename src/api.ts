@@ -8,10 +8,6 @@ console.log(`Running in ${react_env} Mode`)
 
 const baseURL = react_env === 'development' ? development_url : production_url
 
-console.log(development_url)
-console.log(baseURL)
-console.log(development_url)
-
 const api = axios.create({
   baseURL
 });
