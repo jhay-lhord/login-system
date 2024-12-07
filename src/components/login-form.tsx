@@ -16,7 +16,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { loginSchema, LoginFormData } from "@/schemas/login-schema";
 import { AlertCircle, Eye, EyeOff, Mail, Lock, Loader2 } from "lucide-react";
 import { loginUser } from "@/services/loginUser";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { InputOTPForm } from "./input-otp";
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -149,9 +149,9 @@ export default function LoginForm() {
               </Button>
               <p className="text-sm text-center text-gray-600">
                 Don't have an account?{" "}
-                <a href="/register" className="text-primary hover:underline">
+                <Link to="/register" className="text-primary hover:underline">
                   Register
-                </a>
+                </Link>
               </p>
             </CardFooter>
           </form>

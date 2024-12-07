@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/select";
 import { registerSchema, RegisterFormData } from "@/schemas/register-schema";
 import { useRegisterUser } from "@/services/registerUser";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function RegisterForm() {
   const [serverError, setServerError] = useState("");
@@ -202,9 +202,9 @@ export default function RegisterForm() {
             </Button>
             <p className="text-sm text-center text-gray-600">
               Already have an account?{" "}
-              <a href="/" className="text-primary hover:underline">
+              <Link to="/" className="text-primary hover:underline">
                 Login
-              </a>
+              </Link>
             </p>
           </CardFooter>
         </form>
