@@ -22,11 +22,11 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: npm
       - run: npm ci
+      - run: npm run build
         env:
           VITE_REACT_ENV: ${{ secrets.VITE_REACT_ENV }}
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
           VITE_RENDER_API_URL: ${{ secrets.VITE_RENDER_API_URL }}
-      - run: npm run build --present
       - name: Deploy with gh-pages
         run: |
           git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
