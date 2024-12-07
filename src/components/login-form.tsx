@@ -155,9 +155,9 @@ export default function LoginForm() {
               </p>
             </CardFooter>
           </form>
-        ) : (
+        ): (
           <InputOTPForm />
-        )}
+        )} 
       </Card>
     </div>
   );

@@ -6,7 +6,7 @@ import RoleBaseRouting from "./Auth/RoleBaseRoute";
 const App = () => {
   return (
     <>
-      <Router>
+      <Router basename="/login-system">
         <Routes>
           <Route path="/dashboard" element={<RoleBaseRouting />} />
 
