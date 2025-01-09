@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   Select,
@@ -26,10 +26,16 @@ import {
 import { registerSchema, RegisterFormData } from "@/schemas/register-schema";
 import { useRegisterUser } from "@/services/registerUser";
 import { Link, useNavigate } from "react-router-dom";
+import { UserResponse } from "@/types/request/user";
+import { ApiResponse } from "@/lib/helper";
+import { useToast } from "@/hooks/use-toast";
+import { AxiosError } from "axios";
 
 export default function RegisterForm() {
-  const [serverError, setServerError] = useState("");
+  // const [serverError, setServerError] = useState("");
   const [isLoading, setIsLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { toast } = useToast();
   const { mutate } = useRegisterUser();
 
   const navigate = useNavigate()
@@ -43,22 +49,40 @@ export default function RegisterForm() {
     resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit = async (data: RegisterFormData) => {
-    setServerError("");
-    setIsLoading(true)
-    try {
-      console.log("Registration attempt with:", data);
-      mutate(data, {
-        onSuccess: () => {
-          navigate("/")
-          setIsLoading(false)
-        }
-      });
+   const onSubmit = async (data: RegisterFormData) => {
+    setIsLoading(true);
 
-    } catch (error: unknown) {
-      setServerError(
-        `An error occurred during registration. Please try again. ${error}`
-      );
+    const result = registerSchema.safeParse(data);
+
+    if (result.success) {
+      mutate(data, {
+        onSuccess: (response: ApiResponse<UserResponse>) => {
+          setIsLoading(false);
+          console.log(response);
+          if (response.status === "success") {
+            navigate("/");
+            toast({
+              title: "Success",
+              description:
+                "Your account is pending activation by an administrator. You'll be notified once it's activated.",
+            });
+          } else {
+            setErrorMessage(
+              (response.error?.response?.data as { email?: string })?.email ??
+                ""
+            );
+          }
+        },
+        onError: (error) => {
+          setIsLoading(false);
+          console.log(error);
+          if (error instanceof AxiosError) {
+            setErrorMessage(error.response?.data?.email);
+          } else {
+            setErrorMessage("An unexpected error occurred 2");
+          }
+        },
+      });
     }
   };
 
@@ -189,10 +213,11 @@ export default function RegisterForm() {
                 )}
               </div>
             </div>
-            {serverError && (
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>{serverError}</AlertDescription>
+            {errorMessage && (
+              <Alert variant={"destructive"}>
+                <AlertDescription>
+                  <p className="text-red-500">{errorMessage}</p>
+                </AlertDescription>
               </Alert>
             )}
           </CardContent>

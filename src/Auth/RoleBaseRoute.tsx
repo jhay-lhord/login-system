@@ -1,20 +1,32 @@
-import { getRoleFromToken } from "@/lib/jwtHelper";
-import { ACCESS_TOKEN } from "@/constants";
-import AdminDashboard from "@/components/AdminDashboard";
-import UserDashboard from "@/components/UserDashboard";
+import React, { lazy, Suspense } from "react";
+import useAuthStore from "./AuthStore";
+import Loading from "@/components/Loading";
 
-const RoleBaseRouting = () => {
-  const access_token = localStorage.getItem(ACCESS_TOKEN)
-  const role = getRoleFromToken(access_token!)
+const AdminDashboard = lazy(() => import("@/components/AdminDashboard"));
+const UserDashboard = lazy(() => import("@/components/UserDashboard"));
+const LoginDashboard  = lazy(() => import("@/components/login-form"))
 
-  switch (role) {
-    case "Admin":
-      return <AdminDashboard />;
-    case "User":
-      return <UserDashboard />;
-    default:
-      return <div>Access Denied</div>
-  }
+
+const RoleBasedRouting: React.FC = () => {
+  const { user } = useAuthStore();
+
+  const DashboardComponent = React.useMemo(() => {
+
+    switch (user?.role) {
+      case "Admin":
+        return AdminDashboard;
+      case "User":
+        return UserDashboard;
+      default:
+        return LoginDashboard;
+    }
+  }, [user?.role]);
+
+  return (
+      <Suspense fallback={<Loading/>}>
+        <DashboardComponent />
+      </Suspense>
+  );
 };
 
-export default RoleBaseRouting;
+export default RoleBasedRouting;

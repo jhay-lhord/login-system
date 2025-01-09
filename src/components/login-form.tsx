@@ -14,41 +14,49 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { loginSchema, LoginFormData } from "@/schemas/login-schema";
-import { AlertCircle, Eye, EyeOff, Mail, Lock, Loader2 } from "lucide-react";
-import { loginUser } from "@/services/loginUser";
-import { Link, useNavigate } from "react-router-dom";
+import { Eye, EyeOff, Mail, Lock, Loader2 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { InputOTPForm } from "./input-otp";
 import { Checkbox } from "@/components/ui/checkbox";
+import { userLoginType } from "@/types/request/user";
+import { useToast } from "@/hooks/use-toast";
+import useAuthStore from "@/Auth/AuthStore";
 
 export default function LoginForm() {
-  const [serverError, setServerError] = useState("");
-  const [isOTPSent, setIsOTPSent] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState(false);
+  const { checkUser, errorMessage, otpSent } = useAuthStore();
 
-  const navigate = useNavigate();
+  const { toast } = useToast()
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = async (data: LoginFormData) => {
-    setServerError("");
-    try {
-      const { status, isOTPSent } = await loginUser(data);
-      setIsOTPSent(isOTPSent);
-
-      if (status === 200) {
-        navigate("/");
+  const onSubmit = async (data: userLoginType) => {
+    setIsLoading(true);
+    await checkUser(
+      data.email,
+      data.password,
+      (successMessage) => {
+        toast({
+          title: "Success",
+          description: successMessage,
+        });
+      },
+      (errorMessage) => {
+        toast({
+          title: "Error",
+          description: errorMessage,
+          variant: "destructive",
+        });
       }
-    } catch (error: unknown) {
-      setServerError(
-        `An error occurred during login. Please try again. ${error}`
-      );
-    }
+    );
+    setIsLoading(false);
   };
 
   const togglePasswordVisibility = () => {
@@ -66,7 +74,7 @@ export default function LoginForm() {
             Enter your credentials to access your account
           </CardDescription>
         </CardHeader>
-        {!isOTPSent ? (
+        {!otpSent ? (
           <form onSubmit={handleSubmit(onSubmit)}>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -136,16 +144,17 @@ export default function LoginForm() {
                   Forgot password?
                 </a>
               </div>
-              {serverError && (
-                <Alert variant="destructive">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>{serverError}</AlertDescription>
-                </Alert>
-              )}
+              {errorMessage && (
+                  <Alert variant={"destructive"}>
+                    <AlertDescription>
+                      <p className="text-red-500">{errorMessage}</p>
+                    </AlertDescription>
+                  </Alert>
+                )}
             </CardContent>
             <CardFooter className="flex flex-col space-y-4">
-              <Button className="w-full" type="submit" disabled={isSubmitting}>
-                {isSubmitting ? <Loader2 className="animate-spin" /> : "Login"}
+              <Button className="w-full" type="submit" disabled={isLoading}>
+                {isLoading ? <Loader2 className="animate-spin" /> : "Login"}
               </Button>
               <p className="text-sm text-center text-gray-600">
                 Don't have an account?{" "}
@@ -162,3 +171,5 @@ export default function LoginForm() {
     </div>
   );
 }
+
+
