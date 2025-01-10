@@ -3,8 +3,8 @@ import useAuthStore from "./AuthStore";
 import Loading from "@/components/Loading";
 
 const AdminDashboard = lazy(() => import("@/components/AdminDashboard"));
-const UserDashboard = lazy(() => import("@/components/UserDashboard"));
 const LoginDashboard  = lazy(() => import("@/components/login"))
+const HomePage = lazy(() => import("@/homepage"))
 
 
 const RoleBasedRouting: React.FC = () => {
@@ -16,7 +16,7 @@ const RoleBasedRouting: React.FC = () => {
       case "Admin":
         return AdminDashboard;
       case "User":
-        return UserDashboard;
+        return HomePage;
       default:
         return LoginDashboard;
     }
