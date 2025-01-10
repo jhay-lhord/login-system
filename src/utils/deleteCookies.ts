@@ -6,3 +6,4 @@ export const deleteCookies = () => {
 export const deleteAuthStorage = () => {
   localStorage.removeItem("auth-storage");
 }
+//

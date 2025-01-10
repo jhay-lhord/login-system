@@ -6,6 +6,7 @@ export interface ApiResponse<T>{
   error?: AxiosError;
   statusCode?: number;
 }
+//
 
 export const handleSucess = <T>(response: { data: T }): ApiResponse<T> => {
   return {
