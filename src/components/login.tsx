@@ -22,7 +22,7 @@ import { userLoginType } from "@/types/request/user";
 import { useToast } from "@/hooks/use-toast";
 import useAuthStore from "@/Auth/AuthStore";
 
-export default function LoginForm() {
+export default function Login() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState(false);
   const { checkUser, errorMessage, otpSent } = useAuthStore();

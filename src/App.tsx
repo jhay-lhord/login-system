@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import LoginForm from "./components/login-form";
+import Login from "./components/login";
 import RegisterForm from "./components/register-form";
 import RoleBaseRouting from "./Auth/RoleBaseRoute";
 
@@ -10,7 +10,7 @@ const App = () => {
         <Routes>
           <Route path="/dashboard" element={<RoleBaseRouting />} />
 
-          <Route path="/" element={<LoginForm />} />
+          <Route path="/" element={<Login />} />
           <Route path="/register" element={<RegisterForm />} />
         </Routes>
       </Router>

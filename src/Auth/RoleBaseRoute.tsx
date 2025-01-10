@@ -4,7 +4,7 @@ import Loading from "@/components/Loading";
 
 const AdminDashboard = lazy(() => import("@/components/AdminDashboard"));
 const UserDashboard = lazy(() => import("@/components/UserDashboard"));
-const LoginDashboard  = lazy(() => import("@/components/login-form"))
+const LoginDashboard  = lazy(() => import("@/components/login"))
 
 
 const RoleBasedRouting: React.FC = () => {
