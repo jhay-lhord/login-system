@@ -1,1 +1,0 @@
-import{j as e}from"./index-Bjw3Oz0J.js";const r=()=>e.jsx("div",{className:"flex items-center justify-center h-screen bg-gray-100",children:e.jsx("div",{className:"text-3xl font-bold text-gray-800",children:"UserDashboard"})});export{r as default};
